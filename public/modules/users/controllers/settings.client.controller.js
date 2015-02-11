@@ -4,6 +4,8 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 	function($scope, $http, $location, Users, Authentication) {
 		$scope.user = Authentication.user;
 
+		$scope.profpic = '';
+
 		// If user is not signed in then redirect back home
 		if (!$scope.user) $location.path('/');
 
@@ -68,4 +70,22 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 			});
 		};
 	}
-]);
+])
+.directive('fileread', [function(){
+	return {
+		scope: {
+			fileread: '='
+		},
+		link: function(scope, element, attributes) {
+			element.bind('change', function(changeEvent) {
+				var reader = new FileReader();
+				reader.onload = function(loadEvent) {
+					scope.$apply(function() {
+						scope.fileread = loadEvent.target.result;
+					});
+				};
+				reader.readAsDataURL(changeEvent.target.files[0]);
+			});
+		}
+	};
+}]);
